@@ -1,79 +1,66 @@
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import { Asset, COLORS } from "../services/interfaces";
+import { useMemo } from "react";
+import {
+  PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
+} from "recharts";
 
-interface Props {
-  data: Asset[] | undefined;
+export interface PieDatum {
+  name: string;
+  value: number;
 }
 
-// Função para formatar porcentagem
-const formatPercentage = (value: number) => `${(value * 100).toFixed(2)}%`;
+interface Props {
+  /** rótulo central do gráfico (ex.: Ticker) */
+  label?: string;
+  /** quantidade de fatias simuladas (default: 5) */
+  slices?: number;
+}
 
-const PieChartComponent = ({ data }: Props) => {
+/** PieChart dark com dados aleatórios (para protótipo) */
+export default function PieChartComponent({ label, slices = 5 }: Props) {
+  const data: PieDatum[] = useMemo(() => {
+    // gera valores aleatórios que somam ~100
+    const vals = Array.from({ length: slices }, () => 10 + Math.random() * 30);
+    const total = vals.reduce((a, b) => a + b, 0);
+    return vals.map((v, i) => ({
+      name: `Série ${i + 1}`,
+      value: Math.round((v / total) * 100),
+    }));
+  }, [slices]);
+
+  const COLORS = ["#22c55e", "#0ea5e9", "#8b5cf6", "#f59e0b", "#ef4444", "#14b8a6"];
+
   return (
-    <div>
-      {/* Gráfico de Pizza */}
-      <PieChart width={1000} height={400}>
-        <Pie
-          data={data}
-          dataKey="allocation" // Chave usada para o valor
-          nameKey="name" // Nome de cada setor
-          cx="50%" // Posição horizontal do gráfico
-          cy="50%" // Posição vertical do gráfico
-          outerRadius={150} // Raio externo do gráfico
-          fill="#8884d8" // Cor de preenchimento padrão
-          label={(entry) => `${entry.name}: ${formatPercentage(entry.allocation)}`} // Formata o rótulo
-        >
-          {data?.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip formatter={(value: number) => formatPercentage(value)} />
-        <Legend />
-      </PieChart>
-
-      {/* Tabela abaixo do gráfico */}
-      <div style={{ marginTop: "20px", overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th style={styles.headerCell}>Ativo</th>
-              <th style={styles.headerCell}>Retorno Anual Histórico (%)</th>
-              <th style={styles.headerCell}>Volatilidade Histórica (%)</th>
-              <th style={styles.headerCell}>Retorno Anual Projetado (%)</th>
-              <th style={styles.headerCell}>Volatilidade Projetada (%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.map((asset, index) => (
-              <tr key={index}>
-                <td style={styles.cell}>{asset.name}</td>
-                <td style={styles.cell}>{asset.historicalAnnualReturn.toFixed(2)}%</td>
-                <td style={styles.cell}>{asset.historicalAnnualVolatility.toFixed(2)}%</td>
-                <td style={styles.cell}>{asset.forecastAnnualReturn.toFixed(2)}%</td>
-                <td style={styles.cell}>{(asset.forecastAnnualVolatility * 100).toFixed(2)}%</td>
-              </tr>
+    <div style={{ width: "100%", height: "100%", background: "#111827", borderRadius: 8 }}>
+      <ResponsiveContainer>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            innerRadius={70}
+            outerRadius={110}
+            paddingAngle={2}
+          >
+            {data.map((_, idx) => (
+              <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
             ))}
-          </tbody>
-        </table>
-      </div>
+          </Pie>
+          <Tooltip
+            contentStyle={{ background: `$COLORS[idx % COLORS.length]`, border: "1px solid #334155", color: "#fff" }}
+          />
+          <Legend wrapperStyle={{ color: "#e5e7eb" }} />
+        </PieChart>
+      </ResponsiveContainer>
+      {label && (
+        <div
+          style={{
+            position: "relative", top: -200, textAlign: "center",
+            color: "#cbd5e1", fontWeight: 600, pointerEvents: "none",
+          }}
+        >
+          {label}
+        </div>
+      )}
     </div>
   );
-};
-
-// Estilos para a tabela
-const styles = {
-  headerCell: {
-    border: "1px solid #ccc",
-    padding: "8px",
-    backgroundColor: "RGB(33, 37, 41)",
-    fontWeight: "bold",
-    textAlign: "center" as const,
-  },
-  cell: {
-    border: "1px solid #ccc",
-    padding: "8px",
-    textAlign: "center" as const,
-  },
-};
-
-export default PieChartComponent;
+}

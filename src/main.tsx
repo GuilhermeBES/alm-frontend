@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.js"
+import "bootstrap/dist/js/bootstrap.js";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -12,6 +12,8 @@ import HomePage from "./pages/HomePage/HomePage.tsx";
 import AdminRoute from "./services/AdminRoute.tsx";
 import AdminPage from "./pages/AdminPage/AdminPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import AcoesPage from "./pages/AcoesPage/AcoesPage.tsx";
+import AcoesDetalhePage from "./pages/AcoesDetalhePage/AcoesDetalhePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,13 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "acoes",
+        element: <AcoesPage />,
+      },
+      { path: "acoes/:ticker",
+        element: <AcoesDetalhePage /> 
       },
       {
         path: "admin",

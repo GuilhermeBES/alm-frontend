@@ -40,7 +40,9 @@ const MyNavbar = () => {
                     <Nav.Link className="me-5" href="/#">
                       Sobre Nós
                     </Nav.Link>
-                    <Nav.Link href="/#duvidas">Dúvidas Frequentes</Nav.Link>
+                    <Nav.Link className="me-5" href="/#duvidas">Dúvidas Frequentes</Nav.Link>
+                    <Nav.Link className="me-5" href="/#">Aprendizagem</Nav.Link>
+                    <Nav.Link className="me-5" href="/acoes">Ações</Nav.Link>
                   </Nav>
                   <Button
                     className={styles.mainButton}
@@ -55,7 +57,7 @@ const MyNavbar = () => {
                     variant="primary"
                     onClick={() => navigate("/admin")}
                   >
-                    Área Restrita
+                    Entrar
                   </Button>
                 </div>
               </Navbar.Collapse>

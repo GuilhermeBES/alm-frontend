@@ -103,7 +103,7 @@ const AdminPage = () => {
         <Tab eventKey="assets" title="Ativos e Carteira">
           <Row className="mt-3">
             <h3>Carteira</h3>
-            <PieChartComponent data={wallet?.portfolio} />
+            <PieChartComponent label={wallet?.portfolio} />
           </Row>
           <Row className="mt-5">
             <h3>Previsão SARIMA</h3>
