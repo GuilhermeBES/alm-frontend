@@ -1,0 +1,109 @@
+/* Metric Card */
+.card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.card:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 255, 0, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Icon Container */
+.iconContainer {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title {
+  color: rgba(252, 255, 252, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .iconContainer {
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon {
+    font-size: 24px;
+  }
+
+  .title {
+    font-size: 12px;
+  }
+
+  .value {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .iconContainer {
+    width: 44px;
+    height: 44px;
+  }
+
+  .icon {
+    font-size: 20px;
+  }
+
+  .title {
+    font-size: 11px;
+  }
+
+  .value {
+    font-size: 24px;
+  }
+}

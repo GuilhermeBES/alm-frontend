@@ -1,8 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 import styles from "./MyFooter.module.css";
-import instagram from "../assets/instagram.png";
-import youtube from "../assets/facebook.png";
-import facebook from "../assets/facebook.png";
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import logo from "../assets/logo.png";
 
 const MyFooter = () => {
@@ -12,14 +10,14 @@ const MyFooter = () => {
         <Col>
           <img src={logo} />
           <div className="d-flex gap-4 mt-3 mb-3">
-            <a href="https://instagram.com" target="_blank">
-              <img src={instagram} />
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+              <FaInstagram size={32} />
             </a>
-            <a href="https://youtube.com" target="_blank">
-              <img src={youtube} />
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
+              <FaYoutube size={32} />
             </a>
-            <a href="https://facebook.com" target="_blank">
-              <img src={facebook} />
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+              <FaFacebook size={32} />
             </a>
           </div>
           <p>ALM ChatBot © alguns direitos reservados.</p>

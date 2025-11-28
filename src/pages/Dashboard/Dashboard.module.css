@@ -1,0 +1,78 @@
+/* Container Principal */
+.container {
+  min-height: 100vh;
+  background-color: #2D3A3A;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main Content */
+.mainContent {
+  flex: 1;
+  padding: 40px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Welcome Section */
+.welcomeSection {
+  margin-bottom: 40px;
+}
+
+.welcomeTitle {
+  color: #FCFFFC;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.welcomeSubtitle {
+  color: rgba(252, 255, 252, 0.7);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 24px 16px;
+  }
+
+  .welcomeTitle {
+    font-size: 24px;
+  }
+
+  .welcomeSubtitle {
+    font-size: 14px;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 16px;
+  }
+
+  .welcomeTitle {
+    font-size: 20px;
+  }
+}
