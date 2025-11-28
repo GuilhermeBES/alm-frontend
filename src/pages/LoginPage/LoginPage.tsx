@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'react-bootstrap';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import SignUpModal from '../../components/Auth/SignUpModal';
 import logo from '../../assets/logo.png';
 import styles from './LoginPage.module.css';

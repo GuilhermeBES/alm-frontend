@@ -33,7 +33,6 @@ describe('HomePage', () => {
 
   it('has smooth scroll behavior', () => {
     render(<HomePage />);
-    const computedStyle = window.getComputedStyle(document.documentElement);
     // Note: In jsdom this won't be set, but we verify the HTML structure
     expect(document.documentElement).toBeInTheDocument();
   });

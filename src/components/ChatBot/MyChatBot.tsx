@@ -254,7 +254,7 @@ CONTRATADA: __________________________________________
         chatWindow: { showScrollbar: false },
         notification: { disabled: true },
         chatInput: { botDelay: 2000, blockSpam: true, enabledPlaceholderText: "Escreva aqui" },
-        botBubble: { simStream: true, streamSpeed: 60, showAvatar: true },
+        botBubble: { simulateStream: true, streamSpeed: 60, showAvatar: true },
       }}
     />
   );

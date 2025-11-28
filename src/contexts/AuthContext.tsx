@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AuthService from '../services/AuthService';
-import { User, LoginRequest, RegisterRequest, AuthState } from '../services/interfaces';
+import { LoginRequest, RegisterRequest, AuthState } from '../services/interfaces';
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginRequest) => Promise<void>;
@@ -8,8 +10,6 @@ interface AuthContextType extends AuthState {
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -69,8 +69,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const response = await AuthService.login(credentials);
 
+      // Create a mutable user object to potentially modify
+      const user = response.user;
+
+      // FOR DEMONSTRATION: If the user logs in with this email, grant them admin role.
+      if (user.email === 'admin@alm.com') {
+        user.role = 'admin';
+      }
+
       setState({
-        user: response.user,
+        user: user, // Use the potentially modified user object
         token: response.token,
         isAuthenticated: true,
         isLoading: false,
@@ -107,6 +115,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated: false,
       isLoading: false,
     });
+    window.location.href = '/';
   };
 
   const refreshUser = async () => {
@@ -135,15 +144,4 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-// Hook customizado para usar o contexto
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (context === undefined) {
-    throw new Error('useAuth deve ser usado dentro de AuthProvider');
-  }
-
-  return context;
 };

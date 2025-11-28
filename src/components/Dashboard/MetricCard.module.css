@@ -1,0 +1,74 @@
+/* Metric Card */
+.card {
+  width: 100%;
+  background: #444B58;
+  border-radius: 12px; /* Soften the radius */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Add a subtle border */
+  padding: 24px; /* Uniform padding */
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Creates space between title and value container */
+}
+
+.title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px; /* A good size for a label */
+  font-weight: 500;
+  line-height: 22px;
+  color: #BDBDBD; /* Muted color to de-emphasize */
+  margin: 0;
+  padding-bottom: 0; /* Remove old padding */
+}
+
+.valueContainer {
+  display: flex;
+  flex-direction: row; /* Horizontal alignment */
+  align-items: baseline; /* Aligns numbers and symbols nicely */
+  gap: 8px; /* Space between currency and value */
+  margin-top: 0; /* Remove auto margin */
+  padding-top: 0; /* Remove old padding */
+}
+
+.currency {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  color: #E0E0E0;
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.value {
+  font-family: 'Poppins', sans-serif;
+  font-size: 30px;
+  font-weight: 600; /* Bolder for emphasis */
+  line-height: 38px;
+  color: #FFFFFF;
+  text-align: left; /* Align to the left */
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* These are unused, hiding them at the end */
+.iconContainer {
+  display: none;
+}
+.icon {
+  display: none;
+}

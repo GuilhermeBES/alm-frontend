@@ -9,6 +9,7 @@ export interface CashValue {
 }
 
 export interface Asset {
+  ticker: string;
   name: string;
   allocation: number;
   historicalAnnualReturn: number;
@@ -33,6 +34,7 @@ export interface ForecastRequest {
 }
 
 export interface ForecastResponse {
+  ticker: string;
   forecast_dates: string[];
   forecast_values: number[];
   plot_base64?: string;

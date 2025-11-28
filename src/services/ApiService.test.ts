@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import ApiService from './ApiService';
+import { apiService } from './ApiService';
 import { mockWallet, mockForecastResponse } from '../tests/mocks/apiMocks';
 
 // This tells Vitest to replace the real ApiService with the manual mock
@@ -12,36 +12,36 @@ describe('ApiService Manual Mock', () => {
   });
 
   it('get method should be mockable', async () => {
-    (ApiService.get as vi.Mock).mockResolvedValue(mockWallet);
+    const getSpy = vi.spyOn(apiService, 'get').mockResolvedValue(mockWallet);
 
-    const result = await ApiService.get('/portfolio');
-    
-    expect(ApiService.get).toHaveBeenCalledWith('/portfolio');
+    const result = await apiService.get('/portfolio');
+
+    expect(getSpy).toHaveBeenCalledWith('/portfolio');
     expect(result).toEqual(mockWallet);
   });
 
   it('getHTML method should be mockable', async () => {
-    (ApiService.getHTML as vi.Mock).mockResolvedValue('<html></html>');
-    
-    const result = await ApiService.getHTML('/notebook');
+    const getHTMLSpy = vi.spyOn(apiService, 'getHTML').mockResolvedValue('<html></html>');
 
-    expect(ApiService.getHTML).toHaveBeenCalledWith('/notebook');
+    const result = await apiService.getHTML('/notebook');
+
+    expect(getHTMLSpy).toHaveBeenCalledWith('/notebook');
     expect(result).toBe('<html></html>');
   });
 
   it('forecast method should be mockable', async () => {
-    (ApiService.forecast as vi.Mock).mockResolvedValue(mockForecastResponse);
-    const requestData = { ticker: 'TEST', p: 1, d: 1, q: 1, n_steps: 1 };
+    const forecastSpy = vi.spyOn(apiService, 'forecast').mockResolvedValue(mockForecastResponse);
+    const requestData = { ticker: 'TEST', n_steps: 1 };
 
-    const result = await ApiService.forecast(requestData);
+    const result = await apiService.forecast('sarima', requestData);
 
-    expect(ApiService.forecast).toHaveBeenCalledWith(requestData);
+    expect(forecastSpy).toHaveBeenCalledWith('sarima', requestData);
     expect(result).toEqual(mockForecastResponse);
   });
 
   it('get method should handle rejections', async () => {
-    (ApiService.get as vi.Mock).mockRejectedValue(new Error('API Error'));
+    vi.spyOn(apiService, 'get').mockRejectedValue(new Error('API Error'));
 
-    await expect(ApiService.get('/error')).rejects.toThrow('API Error');
+    await expect(apiService.get('/error')).rejects.toThrow('API Error');
   });
 });

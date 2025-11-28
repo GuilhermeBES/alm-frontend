@@ -2,19 +2,12 @@ import { Wallet, CashValue, ForecastResponse, Asset } from '../../services/inter
 
 export const mockAsset: Asset = {
   ticker: 'PETR4.SA',
-  currentPrice: 38.45,
-  quantity: 100,
-  purchasePrice: 35.00,
-  purchaseDate: '2024-01-15',
-  historicalData: [
-    { date: '2024-01-01', price: 35.00 },
-    { date: '2024-01-02', price: 35.50 },
-    { date: '2024-01-03', price: 36.00 },
-  ],
-  forecastData: [
-    { date: '2024-02-01', price: 39.00 },
-    { date: '2024-02-02', price: 39.50 },
-  ],
+  name: 'Petrobras PN',
+  allocation: 38.45,
+  historicalAnnualReturn: 12.5,
+  historicalAnnualVolatility: 18.3,
+  forecastAnnualReturn: 14.2,
+  forecastAnnualVolatility: 16.8,
 };
 
 export const mockWallet: Wallet = {
@@ -23,8 +16,8 @@ export const mockWallet: Wallet = {
     {
       ...mockAsset,
       ticker: 'VALE3.SA',
-      currentPrice: 65.80,
-      quantity: 50,
+      name: 'Vale ON',
+      allocation: 65.80,
     },
   ],
   plotBase64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
@@ -37,9 +30,9 @@ export const mockCashValue: CashValue = {
 
 export const mockForecastResponse: ForecastResponse = {
   ticker: 'PETR4.SA',
-  forecast: [39.0, 39.5, 40.0, 40.5, 41.0],
-  dates: ['2024-02-01', '2024-02-02', '2024-02-03', '2024-02-04', '2024-02-05'],
-  plotBase64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+  forecast_dates: ['2024-02-01', '2024-02-02', '2024-02-03', '2024-02-04', '2024-02-05'],
+  forecast_values: [39.0, 39.5, 40.0, 40.5, 41.0],
+  plot_base64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
 };
 
 export const mockStocks = [

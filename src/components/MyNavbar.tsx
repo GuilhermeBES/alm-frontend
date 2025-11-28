@@ -55,7 +55,7 @@ const MyNavbar = () => {
                   <Button
                     className={`${styles.secondaryButton} ms-3`}
                     variant="primary"
-                    onClick={() => navigate("/admin")}
+                    onClick={() => navigate("/login")}
                   >
                     Entrar
                   </Button>

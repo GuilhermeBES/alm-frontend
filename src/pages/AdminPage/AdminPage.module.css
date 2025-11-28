@@ -1,21 +1,168 @@
-.container {
-  background-color: #2d3a3a;
-  color: #ffffff;
-  height: 100%;
-  min-height: 95vh;
+.adminContainer {
   width: 100%;
-  padding: 3rem 2rem 3rem;
 }
 
-.forecastTable {
-  max-height: 400px;
-  overflow-y: auto;
+.tabContent {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.table {
-  font-size: 0.9rem;
+.card {
+  background-color: #444B58;
+  border-radius: 15px;
+  padding: 24px;
+  width: 100%;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.metricsTable {
-  min-width: 300px;
+.cardTitle {
+  font-family: 'Poppins', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chartImage {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background-color: #FFFFFF; /* Add a background for charts that might be transparent */
+}
+
+/* Custom styles for React-Bootstrap components */
+.customTabs .nav-link {
+  color: #BDBDBD;
+  background-color: transparent;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.customTabs .nav-link:hover {
+  color: #FFFFFF;
+  border-bottom-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.customTabs .nav-link.active {
+  color: #FFFFFF !important;
+  background-color: transparent !important;
+  border-bottom-color: #FFFFFF !important;
+  font-weight: 600;
+}
+
+.customTabs .nav-tabs {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Sub-tabs for reports */
+.customSubTabs {
+  margin-top: 1rem;
+}
+
+.customSubTabs .nav-link {
+  font-size: 14px;
+  padding: 0.5rem;
+  background-color: #32363D;
+  border-radius: 5px !important;
+  margin-right: 8px;
+  border: none !important;
+}
+
+.customSubTabs .nav-link:hover {
+  background-color: #444B58;
+  color: #FFFFFF;
+}
+
+.customSubTabs .nav-link.active {
+  background-color: #2D3A3A !important;
+  color: #FFFFFF !important;
+  border: none !important;
+}
+
+.customSubTabs .nav-tabs {
+  border: none !important;
+}
+
+
+.customButton {
+  background-color: #2D3A3A;
+  border-color: #2D3A3A;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.customButton:hover, .customButton:focus {
+  background-color: #1e2626;
+  border-color: #1e2626;
+  box-shadow: none;
+}
+
+.customButton:disabled {
+  background-color: #444B58;
+  border-color: #444B58;
+  opacity: 0.7;
+}
+
+.customSelect {
+  background-color: #444B58;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Poppins', sans-serif;
+}
+
+.customSelect:focus {
+  background-color: #444B58;
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  box-shadow: none;
+}
+
+.reportFrame {
+  width: 100%;
+  height: 80vh;
+  border: none;
+  border-radius: 8px;
+}
+.fundValue {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.fundValue:last-child {
+  border-bottom: none;
+}
+
+.fundValue span:first-child {
+  color: #BDBDBD;
+}
+
+.fundValue span:last-child {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.noDataMessage {
+  color: #BDBDBD;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
 }

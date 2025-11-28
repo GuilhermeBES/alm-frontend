@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const AdminRoute = ({ children }: { children: JSX.Element }) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const { isAuthenticated, isLoading, user } = useAuth();
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
-  if (loading) {
-    return null;
+  if (isLoading) {
+    return null; // Or a loading spinner
   }
 
-  // if (user?.role !== "admin") {
-  //   return <Navigate to="/" replace />;
-  // }
+  if (!isAuthenticated || user?.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
 
   return children;
 };
