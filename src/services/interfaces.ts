@@ -48,3 +48,37 @@ export interface RiskNotebookResponse {
 export interface RiskReport {
   html: string;
 }
+
+// Authentication interfaces
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'user';
+  createdAt?: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: User;
+  token: string;
+  refreshToken?: string;
+}
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+}
+
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
