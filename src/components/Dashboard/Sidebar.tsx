@@ -16,7 +16,7 @@ import styles from './Sidebar.module.css';
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
 
   const menuItems = [
@@ -46,7 +46,7 @@ const Sidebar = () => {
       <div className={styles.profileSection}>
         <div className={styles.avatarContainer}>
           <div className={styles.avatar}>
-            {user ? getInitials(user.name) : <User size={24} />}
+            {currentUser ? getInitials(currentUser.name) : <User size={24} />}
           </div>
           <button
             className={styles.editButton}
@@ -58,7 +58,7 @@ const Sidebar = () => {
         </div>
         <div className={styles.profileInfo}>
           <span className={styles.profileLabel}>Nome completo</span>
-          <span className={styles.profileName}>{user?.name || 'Usuário'}</span>
+          <span className={styles.profileName}>{currentUser?.name || 'Usuário'}</span>
         </div>
       </div>
 

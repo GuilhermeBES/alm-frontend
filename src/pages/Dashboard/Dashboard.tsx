@@ -1,10 +1,18 @@
-import { Maximize2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Maximize2, TrendingUp, TrendingDown } from 'lucide-react';
 import Sidebar from '../../components/Dashboard/Sidebar';
 import MetricCard from '../../components/Dashboard/MetricCard';
-import SunburstChart from '../../components/Dashboard/SunburstChart';
+import AccumulationChart from '../../components/Dashboard/AccumulationChart';
+import MonthlyDataTable from '../../components/Dashboard/MonthlyDataTable';
+import AllocationBarChart from '../../components/Dashboard/AllocationBarChart';
+import RiskSection from '../../components/Dashboard/RiskSection';
+import { apiService } from '../../services/ApiService';
+import { Asset } from '../../services/interfaces';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './Dashboard.module.css';
 
-// Mock data for portfolio
+// Mock data for portfolio (não usado no momento, mas mantido para referência futura)
+/*
 const portfolioData = {
   "name": "Portfolio",
   "color": "hsl(120, 70%, 50%)",
@@ -64,6 +72,7 @@ const portfolioData = {
     }
   ]
 };
+*/
 
 // Mock data for investments table
 const investmentsData = [
@@ -76,6 +85,57 @@ const investmentsData = [
 ];
 
 const Dashboard = () => {
+  const [portfolioAssets, setPortfolioAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      if (!currentUser) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const response = await apiService.get<{ portfolio: Asset[] }>(`/api/v1/portfolio/${currentUser.id}`);
+        setPortfolioAssets(response.portfolio);
+      } catch (error) {
+        console.error('Erro ao buscar dados do portfólio:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPortfolioData();
+  }, [currentUser]);
+
+  // Formata valor em reais
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
+
+  // Formata porcentagem
+  const formatPercentage = (value: number) => {
+    return `${(value * 100).toFixed(1)}%`;
+  };
+
+  // Determina cor baseada no retorno
+  const getHeatmapColor = (annualReturn: number) => {
+    if (annualReturn > 0.15) return '#2BA84A'; // Verde forte (>15%)
+    if (annualReturn > 0.05) return '#4CAF50'; // Verde médio (5-15%)
+    if (annualReturn > 0) return '#66BB6A'; // Verde claro (0-5%)
+    if (annualReturn > -0.05) return '#FFA726'; // Laranja (-5% a 0%)
+    return '#EF5350'; // Vermelho (<-5%)
+  };
+
+  // Calcula valor total investido por ação (baseado na alocação)
+  const calculateInvestmentValue = (asset: Asset) => {
+    const portfolioTotal = 100000; // Valor total mockado do portfólio
+    return (asset.allocation / 100) * portfolioTotal;
+  };
+
   return (
     <div className={styles.container}>
       {/* Sidebar */}
@@ -146,8 +206,11 @@ const Dashboard = () => {
                 </div>
 
                 <div className={styles.chartContainer}>
-                  <SunburstChart data={portfolioData} />
+                  <AccumulationChart />
                 </div>
+
+                {/* Monthly Data Table */}
+                <MonthlyDataTable />
               </div>
             </div>
 
@@ -190,75 +253,87 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Heatmap Section */}
+              {/* Heatmap Section - COM DADOS REAIS */}
               <div className={styles.tableSection}>
                 <div className={styles.heatmapCard}>
-                  <h3 className={styles.heatmapTitle}>Heatmap</h3>
+                  <h3 className={styles.heatmapTitle}>Heatmap - Desempenho</h3>
                   <div className={styles.heatmapLine}></div>
 
-                  <div className={styles.heatmapGrid}>
-                    {/* PETR4 - Large Green */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapGreen}`}>
-                      <div className={styles.heatmapLabel}>PETR4</div>
-                      <div className={styles.heatmapValue}>R$ 32,88</div>
-                      <div className={styles.heatmapPercentage}>40%</div>
-                      <div className={styles.heatmapTotal}>R$ 2.130.195,20</div>
+                  {loading ? (
+                    <div style={{ color: '#FFFFFF', padding: '20px', textAlign: 'center' }}>
+                      Carregando dados reais...
                     </div>
+                  ) : (
+                    <div className={styles.heatmapGrid}>
+                      {portfolioAssets
+                        .sort((a, b) => b.allocation - a.allocation) // Ordena por alocação
+                        .map((asset, index) => {
+                          const totalValue = calculateInvestmentValue(asset);
+                          const isPositive = asset.historicalAnnualReturn > 0;
 
-                    {/* BTC - Small Dark */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapDark}`}>
-                      <div className={styles.heatmapLabel}>BTC</div>
-                      <div className={styles.heatmapValue}>R$ 540.657,00</div>
-                      <div className={styles.heatmapPercentage}>20%</div>
-                      <div className={styles.heatmapTotal}>R$ 989.019,20</div>
+                          return (
+                            <div
+                              key={asset.ticker}
+                              className={styles.heatmapItem}
+                              style={{
+                                backgroundColor: getHeatmapColor(asset.historicalAnnualReturn),
+                                gridColumn: index === 0 ? '1' : 'auto',
+                                gridRow: index === 0 ? '1 / 3' : 'auto',
+                              }}
+                            >
+                              <div>
+                                <div className={styles.heatmapLabel}>
+                                  {asset.ticker.replace('.SA', '')}
+                                  {isPositive ? (
+                                    <TrendingUp size={14} style={{ marginLeft: '4px', display: 'inline' }} />
+                                  ) : (
+                                    <TrendingDown size={14} style={{ marginLeft: '4px', display: 'inline' }} />
+                                  )}
+                                </div>
+                                <div className={styles.heatmapValue}>
+                                  {formatCurrency(totalValue)}
+                                </div>
+                              </div>
+                              <div>
+                                <div className={styles.heatmapPercentage}>
+                                  {formatPercentage(asset.allocation)}
+                                </div>
+                                <div className={styles.heatmapTotal}>
+                                  {formatCurrency(totalValue)}
+                                </div>
+                                <div className={styles.heatmapReturn}>
+                                  {isPositive ? '+' : ''}{formatPercentage(asset.historicalAnnualReturn)} a.a.
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                     </div>
-
-                    {/* ITUB4 - Small Dark */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapDark}`}>
-                      <div className={styles.heatmapLabel}>ITUB4</div>
-                      <div className={styles.heatmapValue}>R$ 37,77</div>
-                      <div className={styles.heatmapPercentage}>10%</div>
-                      <div className={styles.heatmapTotal}>R$ 456.470,40</div>
-                    </div>
-
-                    {/* VALE3 - Medium Dark */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapDark}`}>
-                      <div className={styles.heatmapLabel}>VALE3</div>
-                      <div className={styles.heatmapValue}>R$ 59,59</div>
-                      <div className={styles.heatmapPercentage}>10%</div>
-                      <div className={styles.heatmapTotal}>R$ 494.509,60</div>
-                    </div>
-
-                    {/* FESA4 - Tiny Dark */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapDark}`}>
-                      <div className={styles.heatmapLabel}>FESA4</div>
-                      <div className={styles.heatmapPercentage}>1,2%</div>
-                    </div>
-
-                    {/* MGLU3 - Medium Dark */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapDark}`}>
-                      <div className={styles.heatmapLabel}>MGLU3</div>
-                      <div className={styles.heatmapValue}>R$ 8,96</div>
-                      <div className={styles.heatmapPercentage}>05%</div>
-                      <div className={styles.heatmapTotal}>R$ 247.254,80</div>
-                    </div>
-
-                    {/* ELET3 - Tiny Dark */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapDark}`}>
-                      <div className={styles.heatmapLabel}>ELET3</div>
-                      <div className={styles.heatmapPercentage}>0,3%</div>
-                    </div>
-
-                    {/* AMER3 - Tiny Dark */}
-                    <div className={`${styles.heatmapItem} ${styles.heatmapDark}`}>
-                      <div className={styles.heatmapLabel}>AMER3</div>
-                      <div className={styles.heatmapPercentage}>0,2%</div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Investment Allocation Section */}
+          <div className={styles.allocationSection}>
+            <div className={styles.chartSection}>
+              <div className={styles.chartHeader}>
+                <h3 className={styles.sectionTitle}>Investment Allocation</h3>
+                <button className={styles.expandButton}>
+                  <Maximize2 size={24} />
+                </button>
+              </div>
+              <div className={styles.chartLine}></div>
+
+              <div className={styles.allocationChartContainer}>
+                <AllocationBarChart />
+              </div>
+            </div>
+          </div>
+
+          {/* Risk Section */}
+          <RiskSection />
         </div>
       </main>
     </div>

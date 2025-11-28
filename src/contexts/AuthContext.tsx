@@ -1,11 +1,11 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect, ReactNode } from 'react';
 import AuthService from '../services/AuthService';
-import { LoginRequest, RegisterRequest, AuthState } from '../services/interfaces';
+import { LoginRequest, RegisterRequest, AuthState, User } from '../services/interfaces';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthContextType extends AuthState {
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<User>;
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -69,13 +69,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const response = await AuthService.login(credentials);
 
-      // Create a mutable user object to potentially modify
+      // Use the user object from the response
       const user = response.user;
-
-      // FOR DEMONSTRATION: If the user logs in with this email, grant them admin role.
-      if (user.email === 'admin@alm.com') {
-        user.role = 'admin';
-      }
 
       setState({
         user: user, // Use the potentially modified user object
@@ -83,6 +78,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         isAuthenticated: true,
         isLoading: false,
       });
+      return user; // Return the user object
     } catch (error) {
       setState(prev => ({ ...prev, isLoading: false }));
       throw error;

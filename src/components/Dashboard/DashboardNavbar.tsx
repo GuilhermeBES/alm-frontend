@@ -6,7 +6,7 @@ import styles from './DashboardNavbar.module.css';
 
 const DashboardNavbar = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const handleLogout = () => {
@@ -39,12 +39,12 @@ const DashboardNavbar = () => {
             onClick={() => setShowUserMenu(!showUserMenu)}
           >
             <div className={styles.userAvatar}>
-              {user ? getInitials(user.name) : 'U'}
+              {currentUser ? getInitials(currentUser.name) : 'U'}
             </div>
             <div className={styles.userInfo}>
-              <span className={styles.userName}>{user?.name || 'Usuário'}</span>
+              <span className={styles.userName}>{currentUser?.name || 'Usuário'}</span>
               <span className={styles.userRole}>
-                {user?.role === 'admin' ? 'Administrador' : 'Usuário'}
+                {currentUser?.role === 'admin' ? 'Administrador' : 'Usuário'}
               </span>
             </div>
             <span className={styles.dropdownIcon}>▼</span>

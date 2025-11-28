@@ -13,13 +13,29 @@ class AuthService {
     },
   });
 
+  // Method to initialize the Axios interceptor
+  static initAxiosInterceptor(): void {
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        const token = this.getToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  }
+
   /**
    * Login do usuário
    */
   static async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
       const response = await this.axiosInstance.post<LoginResponse>(
-        '/auth/login',
+        '/api/v1/auth/login',
         credentials
       );
 
@@ -75,7 +91,7 @@ class AuthService {
   static async register(data: RegisterRequest): Promise<LoginResponse> {
     try {
       const response = await this.axiosInstance.post<LoginResponse>(
-        '/auth/register',
+        '/api/v1/auth/register',
         data
       );
 
@@ -221,7 +237,7 @@ class AuthService {
   static async refreshToken(): Promise<string> {
     try {
       const response = await this.axiosInstance.post<{ token: string }>(
-        '/auth/refresh'
+        '/api/v1/auth/refresh'
       );
 
       this.setToken(response.data.token);
@@ -237,7 +253,7 @@ class AuthService {
    */
   static async getCurrentUser(): Promise<User> {
     try {
-      const response = await this.axiosInstance.get<User>('/auth/me');
+      const response = await this.axiosInstance.get<User>('/api/v1/auth/me');
       this.setUser(response.data);
       return response.data;
     } catch (error) {
@@ -250,5 +266,8 @@ class AuthService {
     }
   }
 }
+
+// Initialize the interceptor once when the AuthService is loaded
+AuthService.initAxiosInterceptor();
 
 export default AuthService;

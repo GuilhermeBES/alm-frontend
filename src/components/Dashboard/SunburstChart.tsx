@@ -4,6 +4,28 @@ interface SunburstChartProps {
   data: any; // Tipo any é aceito pois o Nivo aceita estruturas variadas
 }
 
+// Componente de tooltip customizado
+const CustomTooltip = ({ id, value, color }: any) => (
+  <div
+    style={{
+      background: 'rgba(0, 0, 0, 0.9)',
+      color: '#fff',
+      padding: '12px 16px',
+      border: `2px solid ${color}`,
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+      fontFamily: 'Poppins, sans-serif',
+    }}
+  >
+    <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>
+      {id}
+    </div>
+    <div style={{ fontSize: '12px', color: '#E0E0E0' }}>
+      Alocação: {typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : value}
+    </div>
+  </div>
+);
+
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
@@ -30,6 +52,9 @@ const SunburstChart = ({ data }: SunburstChartProps) => (
       modifiers: [['darker', 1.4]],
     }}
     inheritColorFromParent={false}
+    tooltip={CustomTooltip}
+    animate={true}
+    motionConfig="gentle"
   />
 );
 

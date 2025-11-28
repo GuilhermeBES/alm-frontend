@@ -353,9 +353,9 @@
 
 .heatmapGrid {
   display: grid;
-  grid-template-columns: 200px 110px 90px;
-  grid-template-rows: 100px 85px 65px 50px;
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: minmax(120px, auto);
+  gap: 12px;
   width: 100%;
 }
 
@@ -376,52 +376,38 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Row 1: PETR4 (green, large) | BTC (small, spans 2 cols) */
+/* Layout dinâmico - primeiro item maior */
 .heatmapItem:nth-child(1) {
-  grid-column: 1;
-  grid-row: 1;
-  padding: 10px 12px;
+  grid-column: span 2;
+  min-height: 140px;
+  padding: 14px 16px;
 }
 
-.heatmapItem:nth-child(2) {
-  grid-column: 2 / 4;
-  grid-row: 1;
+.heatmapItem:nth-child(1) .heatmapLabel {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
 }
 
-/* Row 2: ITUB4 | VALE3 | FESA4 (tiny) */
-.heatmapItem:nth-child(3) {
-  grid-column: 1;
-  grid-row: 2;
+.heatmapItem:nth-child(1) .heatmapValue {
+  font-size: 16px;
+  margin-top: 4px;
 }
 
-.heatmapItem:nth-child(4) {
-  grid-column: 2;
-  grid-row: 2;
+.heatmapItem:nth-child(1) .heatmapPercentage {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 8px;
 }
 
-.heatmapItem:nth-child(5) {
-  grid-column: 3;
-  grid-row: 2;
-  padding: 6px 8px;
+.heatmapItem:nth-child(1) .heatmapTotal {
+  font-size: 13px;
+  margin-top: 4px;
 }
 
-/* Row 3: MGLU3 | ELET3 (tiny) */
-.heatmapItem:nth-child(6) {
-  grid-column: 1;
-  grid-row: 3;
-}
-
-.heatmapItem:nth-child(7) {
-  grid-column: 2;
-  grid-row: 3;
-  padding: 6px 8px;
-}
-
-/* Row 4: AMER3 (tiny, right aligned) */
-.heatmapItem:nth-child(8) {
-  grid-column: 2;
-  grid-row: 4;
-  padding: 6px 8px;
+.heatmapItem:nth-child(1) .heatmapReturn {
+  font-size: 12px;
+  margin-top: 6px;
 }
 
 .heatmapLabel {
@@ -462,59 +448,21 @@
   word-wrap: break-word;
 }
 
-/* PETR4 (item 1) - Larger green box */
-.heatmapItem:nth-child(1) {
+.heatmapReturn {
+  font-family: 'Poppins', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+  color: #FFFFFF;
+  margin-top: 4px;
+  opacity: 0.9;
+  word-wrap: break-word;
+}
+
+/* Itens secundários (2, 3, 4) - tamanho padrão */
+.heatmapItem:not(:nth-child(1)) {
+  min-height: 100px;
   padding: 10px 12px;
-}
-
-.heatmapItem:nth-child(1) .heatmapLabel {
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.heatmapItem:nth-child(1) .heatmapValue {
-  font-size: 14px;
-}
-
-.heatmapItem:nth-child(1) .heatmapPercentage {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.heatmapItem:nth-child(1) .heatmapTotal {
-  font-size: 12px;
-}
-
-/* BTC (item 2) - Medium box */
-.heatmapItem:nth-child(2) .heatmapLabel {
-  font-size: 12px;
-}
-
-.heatmapItem:nth-child(2) .heatmapValue {
-  font-size: 11px;
-}
-
-.heatmapItem:nth-child(2) .heatmapPercentage {
-  font-size: 13px;
-}
-
-.heatmapItem:nth-child(2) .heatmapTotal {
-  font-size: 10px;
-}
-
-/* Tiny items (FESA4, ELET3, AMER3) - items 5, 7, 8 */
-.heatmapItem:nth-child(5) .heatmapLabel,
-.heatmapItem:nth-child(7) .heatmapLabel,
-.heatmapItem:nth-child(8) .heatmapLabel {
-  font-size: 10px;
-  line-height: 15px;
-}
-
-.heatmapItem:nth-child(5) .heatmapPercentage,
-.heatmapItem:nth-child(7) .heatmapPercentage,
-.heatmapItem:nth-child(8) .heatmapPercentage {
-  font-size: 11px;
-  line-height: 16px;
 }
 
 /* Heatmap Colors */
@@ -524,6 +472,19 @@
 
 .heatmapDark {
   background-color: #32363D;
+}
+
+/* Allocation Section */
+.allocationSection {
+  margin-top: 40px;
+  width: 100%;
+}
+
+.allocationChartContainer {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  margin-top: 20px;
 }
 
 /* Responsividade */

@@ -14,6 +14,7 @@ import {
 } from '../../services/interfaces';
 import dashboardStyles from '../Dashboard/Dashboard.module.css'; // Import dashboard styles
 import styles from './AdminPage.module.css';
+import { useAuth } from '../../hooks/useAuth';
 
 const AVAILABLE_TICKERS = ["GLD", "PETR4.SA", "VALE3.SA", "WEGE3.SA"];
 const SARIMA_ORDER: [number, number, number] = [2, 1, 2];
@@ -40,6 +41,7 @@ const AdminPage = () => {
   const [forecastResult, setForecastResult] = useState<ForecastResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { currentUser } = useAuth(); // Get currentUser
 
   const RISKS_REPORTS = [
     "investment_risk2",
@@ -53,18 +55,20 @@ const AdminPage = () => {
 
   useEffect(() => {
     const getData = async () => {
-      apiService.get<Wallet>("/portfolio-allocation").then((res) => setWallet(res));
-      apiService.get<CashValue>("/cash-value").then((res) => setCashValue(res));
+      if (!currentUser) return; // Only fetch if user is authenticated
+
+      apiService.get<Wallet>(`/api/v1/portfolio/${currentUser.id}`).then((res) => setWallet(res));
+      apiService.get<CashValue>("/api/v1/cash-value").then((res) => setCashValue(res));
       const reports = await Promise.all(
         RISKS_REPORTS.map(async (report) => {
-          const res = await apiService.get<RiskNotebookResponse>(`/riskNotebook?notebookName=${report}`);
+          const res = await apiService.get<RiskNotebookResponse>(`/api/v1/riskNotebook?notebookName=${report}`);
           return { html: res.notebook_html };
         })
       );
       setRiskReports(reports);
     };
     getData();
-  }, []);
+  }, [currentUser]);
 
   const handleForecast = async () => {
     setIsLoading(true);
@@ -205,7 +209,7 @@ const AdminPage = () => {
                    <div className={styles.card}>
                      <h3 className={styles.cardTitle}>Dashboard Passivos</h3>
                     <iframe
-                      src={`${apiUrl}/passivos`}
+                      src={`${apiUrl}/api/v1/passivos`}
                       title="Passivos"
                       className={styles.reportFrame}
                     />
