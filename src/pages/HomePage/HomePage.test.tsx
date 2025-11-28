@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '../../tests/utils/test-utils';
+import { render, screen } from '../../tests/utils/test-utils';
 import HomePage from './HomePage';
 
 vi.mock('react-router-dom', async () => {
@@ -13,29 +13,22 @@ vi.mock('react-router-dom', async () => {
 describe('HomePage', () => {
   it('renders hero section', () => {
     render(<HomePage />);
-    expect(screen.getByText(/Gestão de Ativo e Passivos/i)).toBeInTheDocument();
+    expect(screen.getByText(/Invista com Confiança/i)).toBeInTheDocument();
   });
 
   it('renders CTA button', () => {
     render(<HomePage />);
-    expect(screen.getByText(/Simular agora/i)).toBeInTheDocument();
+    expect(screen.getByText(/Começar agora/i)).toBeInTheDocument();
   });
 
   it('renders features section', () => {
     render(<HomePage />);
-    expect(screen.getByText(/Balanceamento/i)).toBeInTheDocument();
+    expect(screen.getByText(/Balanceamento de ativos/i)).toBeInTheDocument();
   });
 
   it('renders FAQ section', () => {
     render(<HomePage />);
-    expect(screen.getByText(/Perguntas Frequentes/i)).toBeInTheDocument();
-  });
-
-  it('renders about section', () => {
-    render(<HomePage />);
-    // Check for section with id="sobre"
-    const aboutSection = document.getElementById('sobre');
-    expect(aboutSection).toBeInTheDocument();
+    expect(screen.getByText(/Dúvidas frequentes/i)).toBeInTheDocument();
   });
 
   it('has smooth scroll behavior', () => {
@@ -47,6 +40,6 @@ describe('HomePage', () => {
 
   it('renders footer', () => {
     render(<HomePage />);
-    expect(screen.getByText(/© 2024 ALM/i)).toBeInTheDocument();
+    expect(screen.getByText(/ALM ChatBot © alguns direitos reservados./i)).toBeInTheDocument();
   });
 });

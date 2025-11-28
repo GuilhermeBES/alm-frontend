@@ -36,5 +36,17 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 } as any;
 
+// Mock ResizeObserver
+global.ResizeObserver = class ResizeObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  takeRecords() {
+    return [];
+  }
+  unobserve() {}
+} as any;
+
 // Mock scrollTo
 window.scrollTo = vi.fn();
+

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, within } from '../../tests/utils/test-utils';
+import { render, screen, fireEvent } from '../../tests/utils/test-utils';
 import AcoesPage from './AcoesPage';
 
 vi.mock('react-router-dom', async () => {
@@ -13,23 +13,23 @@ vi.mock('react-router-dom', async () => {
 describe('AcoesPage', () => {
   it('renders page title', () => {
     render(<AcoesPage />);
-    expect(screen.getByText(/Ações Disponíveis/i)).toBeInTheDocument();
+    expect(screen.getByText(/Todas as ações/i)).toBeInTheDocument();
   });
 
   it('renders view toggle buttons', () => {
     render(<AcoesPage />);
-    expect(screen.getByText(/Grid/i)).toBeInTheDocument();
-    expect(screen.getByText(/Lista/i)).toBeInTheDocument();
+    expect(screen.getByTitle(/Visualização em grade/i)).toBeInTheDocument();
+    expect(screen.getByTitle(/Visualização em lista/i)).toBeInTheDocument();
   });
 
   it('switches between grid and list view', () => {
     render(<AcoesPage />);
-    const listButton = screen.getByText(/Lista/i);
+    const listButton = screen.getByTitle(/Visualização em lista/i);
 
     fireEvent.click(listButton);
 
     // After clicking, list button should be active
-    expect(listButton.closest('button')).toHaveClass('btn-primary');
+    expect(listButton.closest('button')).toHaveClass('btn-success');
   });
 
   it('renders stock cards', () => {
@@ -40,8 +40,8 @@ describe('AcoesPage', () => {
 
   it('groups stocks by sector', () => {
     render(<AcoesPage />);
-    expect(screen.getByText(/Petróleo e Gás/i)).toBeInTheDocument();
-    expect(screen.getByText(/Mineração/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Petróleo, Gás e Biocombustíveis/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Mineração/i })).toBeInTheDocument();
   });
 
   it('displays stock prices', () => {
@@ -53,7 +53,7 @@ describe('AcoesPage', () => {
 
   it('displays sector badges with colors', () => {
     render(<AcoesPage />);
-    const badges = screen.getAllByText(/Petróleo e Gás|Mineração|Bancos/i);
+    const badges = screen.getAllByText(/Petróleo, Gás e Biocombustíveis|Mineração|Financeiro/i);
     expect(badges.length).toBeGreaterThan(0);
   });
 

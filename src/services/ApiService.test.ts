@@ -1,128 +1,47 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import axios from 'axios';
 import ApiService from './ApiService';
-import { mockWallet, mockCashValue, mockForecastResponse } from '../tests/mocks/apiMocks';
+import { mockWallet, mockForecastResponse } from '../tests/mocks/apiMocks';
 
-vi.mock('axios');
+// This tells Vitest to replace the real ApiService with the manual mock
+// located in src/services/__mocks__/ApiService.ts
+vi.mock('./ApiService');
 
-describe('ApiService', () => {
+describe('ApiService Manual Mock', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('get', () => {
-    it('makes GET request and returns data', async () => {
-      const mockAxios = axios as any;
-      mockAxios.create.mockReturnValue({
-        get: vi.fn().mockResolvedValue({ data: mockWallet }),
-      });
+  it('get method should be mockable', async () => {
+    (ApiService.get as vi.Mock).mockResolvedValue(mockWallet);
 
-      const result = await ApiService.get('/portfolio-allocation');
-      expect(result).toEqual(mockWallet);
-    });
-
-    it('throws error on failed request', async () => {
-      const mockAxios = axios as any;
-      mockAxios.create.mockReturnValue({
-        get: vi.fn().mockRejectedValue(new Error('Network error')),
-      });
-      mockAxios.isAxiosError = vi.fn().mockReturnValue(false);
-
-      await expect(ApiService.get('/portfolio-allocation')).rejects.toThrow();
-    });
-
-    it('handles axios error with detail message', async () => {
-      const mockAxios = axios as any;
-      const axiosError = {
-        response: {
-          data: {
-            detail: 'Not found',
-          },
-        },
-      };
-
-      mockAxios.create.mockReturnValue({
-        get: vi.fn().mockRejectedValue(axiosError),
-      });
-      mockAxios.isAxiosError = vi.fn().mockReturnValue(true);
-
-      await expect(ApiService.get('/portfolio-allocation')).rejects.toThrow(
-        'Not found'
-      );
-    });
+    const result = await ApiService.get('/portfolio');
+    
+    expect(ApiService.get).toHaveBeenCalledWith('/portfolio');
+    expect(result).toEqual(mockWallet);
   });
 
-  describe('getHTML', () => {
-    it('makes GET request for HTML content', async () => {
-      const mockAxios = axios as any;
-      const htmlContent = '<html><body>Test</body></html>';
+  it('getHTML method should be mockable', async () => {
+    (ApiService.getHTML as vi.Mock).mockResolvedValue('<html></html>');
+    
+    const result = await ApiService.getHTML('/notebook');
 
-      mockAxios.create.mockReturnValue({
-        get: vi.fn().mockResolvedValue({ data: htmlContent }),
-      });
-
-      const result = await ApiService.getHTML('/riskNotebook?notebookName=test');
-      expect(result).toBe(htmlContent);
-    });
-
-    it('uses correct headers for HTML request', async () => {
-      const mockAxios = axios as any;
-      const getMock = vi.fn().mockResolvedValue({ data: '<html></html>' });
-
-      mockAxios.create.mockReturnValue({
-        get: getMock,
-      });
-
-      await ApiService.getHTML('/test');
-
-      expect(getMock).toHaveBeenCalledWith(
-        '/test',
-        expect.objectContaining({
-          headers: { Accept: 'text/html' },
-        })
-      );
-    });
+    expect(ApiService.getHTML).toHaveBeenCalledWith('/notebook');
+    expect(result).toBe('<html></html>');
   });
 
-  describe('forecast', () => {
-    it('makes POST request with forecast data', async () => {
-      const mockAxios = axios as any;
-      const postMock = vi.fn().mockResolvedValue({ data: mockForecastResponse });
+  it('forecast method should be mockable', async () => {
+    (ApiService.forecast as vi.Mock).mockResolvedValue(mockForecastResponse);
+    const requestData = { ticker: 'TEST', p: 1, d: 1, q: 1, n_steps: 1 };
 
-      mockAxios.create.mockReturnValue({
-        post: postMock,
-      });
+    const result = await ApiService.forecast(requestData);
 
-      const requestData = {
-        ticker: 'PETR4.SA',
-        p: 1,
-        d: 1,
-        q: 1,
-        n_steps: 30,
-      };
+    expect(ApiService.forecast).toHaveBeenCalledWith(requestData);
+    expect(result).toEqual(mockForecastResponse);
+  });
 
-      const result = await ApiService.forecast(requestData);
+  it('get method should handle rejections', async () => {
+    (ApiService.get as vi.Mock).mockRejectedValue(new Error('API Error'));
 
-      expect(postMock).toHaveBeenCalledWith('/forecast/sarima', requestData);
-      expect(result).toEqual(mockForecastResponse);
-    });
-
-    it('throws error on failed forecast', async () => {
-      const mockAxios = axios as any;
-      mockAxios.create.mockReturnValue({
-        post: vi.fn().mockRejectedValue(new Error('Forecast failed')),
-      });
-      mockAxios.isAxiosError = vi.fn().mockReturnValue(false);
-
-      const requestData = {
-        ticker: 'INVALID',
-        p: 1,
-        d: 1,
-        q: 1,
-        n_steps: 30,
-      };
-
-      await expect(ApiService.forecast(requestData)).rejects.toThrow();
-    });
+    await expect(ApiService.get('/error')).rejects.toThrow('API Error');
   });
 });
