@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Alert, Button, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
 import Sidebar from '../../components/Dashboard/Sidebar';
 import SunburstChart from '../../components/Dashboard/SunburstChart';
+import InferencePanel from '../../components/Inference/InferencePanel';
 import { apiService, apiUrl } from '../../services/ApiService';
 import {
   Asset,
@@ -229,6 +230,12 @@ const AdminPage = () => {
                       ))}
                     </Tabs>
                   </div>
+                </div>
+              </Tab>
+
+              <Tab eventKey="xlstm-inference" title="xLSTM Inference">
+                <div className={styles.tabContent}>
+                  <InferencePanel />
                 </div>
               </Tab>
             </Tabs>
