@@ -96,7 +96,15 @@ const Dashboard = () => {
         return;
       }
       try {
-        const response = await apiService.get<{ portfolio: Asset[] }>(`/api/v1/portfolio/${currentUser.id}`);
+        // Converte user.id de string para número
+        const userId = parseInt(currentUser.id, 10);
+        if (isNaN(userId)) {
+          console.error('ID de usuário inválido:', currentUser.id);
+          setLoading(false);
+          return;
+        }
+
+        const response = await apiService.get<{ portfolio: Asset[] }>(`/api/v1/portfolio/${userId}`);
         setPortfolioAssets(response.portfolio);
       } catch (error) {
         console.error('Erro ao buscar dados do portfólio:', error);
@@ -315,11 +323,11 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Investment Allocation Section */}
+          {/* Alocação do Investimento Section */}
           <div className={styles.allocationSection}>
             <div className={styles.chartSection}>
               <div className={styles.chartHeader}>
-                <h3 className={styles.sectionTitle}>Investment Allocation</h3>
+                <h3 className={styles.sectionTitle}>Investimento Alocado</h3>
                 <button className={styles.expandButton}>
                   <Maximize2 size={24} />
                 </button>

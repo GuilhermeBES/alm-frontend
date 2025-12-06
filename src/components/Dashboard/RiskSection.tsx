@@ -59,9 +59,9 @@ const RiskSection = ({ data }: RiskSectionProps) => {
       </div>
 
       <div className={styles.content}>
-        {/* Fase de acumulação header */}
+        {/* Monitoramento de riscos header */}
         <div className={styles.chartHeader}>
-          <h3 className={styles.chartTitle}>Fase de acumulação</h3>
+          <h3 className={styles.chartTitle}>Monitoramento de riscos</h3>
           <div className={styles.controls}>
             <button className={styles.controlButton}>Hoje</button>
             <button className={styles.controlButton}>1m</button>
