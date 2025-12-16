@@ -26,7 +26,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-(globalThis as any).IntersectionObserver = class IntersectionObserver {
+global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
   observe() {}
@@ -34,10 +34,10 @@ Object.defineProperty(window, 'matchMedia', {
     return [];
   }
   unobserve() {}
-};
+} as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver
-(globalThis as any).ResizeObserver = class ResizeObserver {
+global.ResizeObserver = class ResizeObserver {
   constructor() {}
   disconnect() {}
   observe() {}
@@ -45,7 +45,7 @@ Object.defineProperty(window, 'matchMedia', {
     return [];
   }
   unobserve() {}
-};
+} as unknown as typeof ResizeObserver;
 
 // Mock scrollTo
 window.scrollTo = vi.fn();

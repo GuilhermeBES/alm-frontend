@@ -214,7 +214,7 @@ class AuthService {
   /**
    * Decodifica JWT token
    */
-  private static decodeToken(token: string): any {
+  private static decodeToken(token: string): { exp: number; [key: string]: unknown } {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -226,7 +226,7 @@ class AuthService {
       );
 
       return JSON.parse(jsonPayload);
-    } catch (error) {
+    } catch {
       throw new Error('Token inválido');
     }
   }
@@ -242,7 +242,7 @@ class AuthService {
 
       this.setToken(response.data.token);
       return response.data.token;
-    } catch (error) {
+    } catch {
       this.logout();
       throw new Error('Sessão expirada');
     }

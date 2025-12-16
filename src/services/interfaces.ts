@@ -96,7 +96,7 @@ export enum JobStatus {
 export interface ModelInfo {
   name: string;
   path: string;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   loaded: boolean;
 }
 

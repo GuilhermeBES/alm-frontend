@@ -1,4 +1,4 @@
-import { ResponsiveSunburst } from '@nivo/sunburst';
+import { ResponsiveSunburst, ComputedDatum } from '@nivo/sunburst';
 
 interface SunburstNode {
   name: string;
@@ -10,14 +10,10 @@ interface SunburstChartProps {
   data: SunburstNode;
 }
 
-interface CustomTooltipProps {
-  id: string;
-  value: number;
-  color: string;
-}
-
 // Componente de tooltip customizado
-const CustomTooltip = ({ id, value, color }: CustomTooltipProps) => (
+const CustomTooltip = (props: ComputedDatum<SunburstNode>) => {
+  const { id, value, color } = props;
+  return (
   <div
     style={{
       background: 'rgba(0, 0, 0, 0.9)',
@@ -36,7 +32,8 @@ const CustomTooltip = ({ id, value, color }: CustomTooltipProps) => (
       Alocação: {typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : value}
     </div>
   </div>
-);
+  );
+};
 
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
