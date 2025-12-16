@@ -1,11 +1,23 @@
 import { ResponsiveSunburst } from '@nivo/sunburst';
 
+interface SunburstNode {
+  name: string;
+  children?: SunburstNode[];
+  value?: number;
+}
+
 interface SunburstChartProps {
-  data: any; // Tipo any é aceito pois o Nivo aceita estruturas variadas
+  data: SunburstNode;
+}
+
+interface CustomTooltipProps {
+  id: string;
+  value: number;
+  color: string;
 }
 
 // Componente de tooltip customizado
-const CustomTooltip = ({ id, value, color }: any) => (
+const CustomTooltip = ({ id, value, color }: CustomTooltipProps) => (
   <div
     style={{
       background: 'rgba(0, 0, 0, 0.9)',

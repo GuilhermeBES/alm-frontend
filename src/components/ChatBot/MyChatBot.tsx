@@ -94,7 +94,7 @@ CONTRATADA: __________________________________________
     let currentY = 10;
     const pageHeight = doc.internal.pageSize.height;
 
-    lines.forEach((line: any) => {
+    lines.forEach((line: string) => {
       // Verificar se o texto ultrapassou a altura da página
       if (currentY + 10 > pageHeight) {
         doc.addPage(); // Adiciona uma nova página
@@ -117,7 +117,7 @@ CONTRATADA: __________________________________________
     },
     ask_name: {
       message: "Para começarmos, qual o seu nome?",
-      function: (params: any) => setForm({ ...form, name: params.userInput }),
+      function: (params: { userInput: string }) => setForm({ ...form, name: params.userInput }),
       path: "show_welcome",
     },
     show_welcome: {
@@ -130,13 +130,13 @@ CONTRATADA: __________________________________________
       message: `Em quantos anos você pretende se aposentar? Seria o período em que você estaria investindo no seu futuro!`,
       checkboxes: { items: ["3 anos", "5 anos", "10 anos", "15 anos", "20 ou mais anos"], max: 1 },
       chatDisabled: true,
-      function: (params: any) => setForm({ ...form, yearsToRetire: params.userInput }),
+      function: (params: { userInput: string }) => setForm({ ...form, yearsToRetire: params.userInput }),
       path: "ask_value_to_deposit",
     },
     ask_value_to_deposit: {
       message:
         "Durante esse período, qual o valor que você consegue se comprometer em investir mensalmente?",
-      function: (params: any) => setForm({ ...form, valueToDeposit: params.userInput }),
+      function: (params: { userInput: string }) => setForm({ ...form, valueToDeposit: params.userInput }),
       path: "show_prediction",
     },
     show_prediction: {
@@ -158,7 +158,7 @@ CONTRATADA: __________________________________________
     ask_know_more: {
       message: "Você deseja saber mais?",
       options: ["Claro!"],
-      function: (params: any) => setForm({ ...form, knowMore: params.userInput }),
+      function: (params: { userInput: string }) => setForm({ ...form, knowMore: params.userInput }),
       path: "end",
     },
     end: {

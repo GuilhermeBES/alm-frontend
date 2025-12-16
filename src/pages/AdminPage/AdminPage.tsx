@@ -34,6 +34,16 @@ const transformDataForSunburst = (wallet: Wallet | undefined) => {
   };
 };
 
+const RISKS_REPORTS = [
+  "investment_risk2",
+  "investment_risk",
+  "interest_rate_risk_liability",
+  "interest_rate_risk_assets",
+  "crypto_risk2",
+  "country_risk",
+  "country_risk",
+];
+
 const AdminPage = () => {
   const [wallet, setWallet] = useState<Wallet>();
   const [cashValue, setCashValue] = useState<CashValue>();
@@ -43,16 +53,6 @@ const AdminPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { currentUser } = useAuth(); // Get currentUser
-
-  const RISKS_REPORTS = [
-    "investment_risk2",
-    "investment_risk",
-    "interest_rate_risk_liability",
-    "interest_rate_risk_assets",
-    "crypto_risk2",
-    "country_risk",
-    "country_risk",
-  ];
 
   useEffect(() => {
     const getData = async () => {

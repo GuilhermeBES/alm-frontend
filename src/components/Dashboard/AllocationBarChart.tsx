@@ -32,7 +32,16 @@ const AllocationBarChart = ({ data }: AllocationBarChartProps) => {
     }).format(value);
   };
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  interface CustomTooltipProps {
+    active?: boolean;
+    payload?: {
+      value: number;
+      payload: AllocationData;
+    }[];
+    label?: string | number;
+  }
+
+  const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div

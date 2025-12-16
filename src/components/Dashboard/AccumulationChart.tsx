@@ -45,7 +45,16 @@ const AccumulationChart = ({ data }: AccumulationChartProps) => {
     return year.toString();
   };
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  interface CustomTooltipProps {
+    active?: boolean;
+    payload?: {
+      value: number;
+      payload: { year: number; value: number; };
+    }[];
+    label?: string;
+  }
+
+  const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div

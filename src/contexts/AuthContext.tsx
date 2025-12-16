@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, ReactNode } from 'react';
 import AuthService from '../services/AuthService';
 import { LoginRequest, RegisterRequest, AuthState, User } from '../services/interfaces';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthContextType extends AuthState {

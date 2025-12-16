@@ -1,7 +1,17 @@
 import { ResponsiveLine } from '@nivo/line';
 
+interface Datum {
+  x: number | string | Date;
+  y: number | string | Date;
+}
+
+interface Serie {
+  id: string | number;
+  data: Datum[];
+}
+
 interface NivoLineChartProps {
-  data: any; // Tipo any é aceito pois o Nivo aceita estruturas variadas
+  data: Serie[];
 }
 
 const theme = {
