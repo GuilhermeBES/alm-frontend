@@ -1,0 +1,156 @@
+.inferencePanel {
+  margin: 1rem 0;
+}
+
+.card {
+  background: #2c3542;
+  border: 1px solid #3d4654;
+  border-radius: 8px;
+  color: #ffffff;
+}
+
+.card :global(.card-header) {
+  background: #232a35;
+  border-bottom: 1px solid #3d4654;
+  padding: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #ffffff;
+}
+
+.cardSubtitle {
+  font-size: 0.9rem;
+  color: #b0b8c4;
+  margin: 0;
+}
+
+.card :global(.card-body) {
+  padding: 1.5rem;
+}
+
+.card :global(.form-label) {
+  color: #ffffff;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.card :global(.form-control),
+.card :global(.form-select) {
+  background: #1a202c;
+  border: 1px solid #3d4654;
+  color: #ffffff;
+}
+
+.card :global(.form-control:focus),
+.card :global(.form-select:focus) {
+  background: #232a35;
+  border-color: #4a90e2;
+  color: #ffffff;
+  box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.card :global(.form-text) {
+  color: #8892a0;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 0.75rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.uploadResponse {
+  margin-top: 1.5rem;
+}
+
+.pollingIndicator {
+  margin-top: 1.5rem;
+}
+
+.results {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #3d4654;
+}
+
+.results h4,
+.results h5 {
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.resultsTable,
+.pricesTable {
+  background: #1a202c;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.resultsTable :global(th),
+.pricesTable :global(th) {
+  background: #232a35;
+  color: #ffffff;
+  border-color: #3d4654;
+}
+
+.resultsTable :global(td),
+.pricesTable :global(td) {
+  background: #2c3542;
+  color: #ffffff;
+  border-color: #3d4654;
+}
+
+.resultsTable :global(tbody tr:hover),
+.pricesTable :global(tbody tr:hover) {
+  background: #323b4a;
+}
+
+.metadata {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #3d4654;
+}
+
+.card :global(.badge) {
+  font-size: 0.875rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.card :global(.alert) {
+  background: #1a202c;
+  border-color: #3d4654;
+  color: #ffffff;
+}
+
+.card :global(.alert-info) {
+  background: rgba(74, 144, 226, 0.1);
+  border-color: #4a90e2;
+  color: #a3c8f0;
+}
+
+.card :global(.alert-danger) {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: #dc3545;
+  color: #f5a9b1;
+}
+
+.card :global(.text-success) {
+  color: #4caf50 !important;
+}
+
+.card :global(.text-danger) {
+  color: #f44336 !important;
+}
+
+.card :global(.text-muted) {
+  color: #8892a0 !important;
+}
+
+.card :global(.text-warning) {
+  color: #ffc107 !important;
+}

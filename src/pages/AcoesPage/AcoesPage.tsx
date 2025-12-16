@@ -2,11 +2,6 @@ import { useMemo, useState } from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { FaThLarge, FaThList, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import styles from './AcoesPage.module.css';
-import instagram from "../../assets/instagram.png";
-import youtube from "../../assets/youtube.png";
-import facebook from "../../assets/facebook.png";
-import logo from "../../assets/logo.png";
 import MyFooter from "../../components/MyFooter";
 
 

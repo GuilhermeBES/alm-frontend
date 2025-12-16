@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'react-bootstrap';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import SignUpModal from '../../components/Auth/SignUpModal';
 import logo from '../../assets/logo.png';
 import styles from './LoginPage.module.css';
@@ -34,13 +34,17 @@ const LoginPage = () => {
 
     try {
       // Usar email como username por enquanto
-      await login({
+      const loggedInUser = await login({
         email: formData.username,
         password: formData.password,
       });
 
-      // Redirecionar para dashboard após login
-      navigate('/dashboard');
+      // Redirecionar após login com base no role do usuário retornado
+      if (loggedInUser?.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {

@@ -4,7 +4,7 @@ import MyChatBot from './MyChatBot';
 
 // Mock react-chatbotify
 vi.mock('react-chatbotify', () => ({
-  default: ({ children }: any) => (
+  default: ({ children }: { children: import('react').ReactNode }) => (
     <div data-testid="chatbot-mock">
       {children}
     </div>

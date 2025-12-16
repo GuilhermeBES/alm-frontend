@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '../tests/utils/test-utils';
 import MyNavbar from './MyNavbar';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 // Create a persistent mock for the navigate function
 const navigateMock = vi.fn();
@@ -16,7 +16,7 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-const useLocationMock = useLocation as vi.Mock;
+const useLocationMock = useLocation as ReturnType<typeof vi.fn>;
 
 describe('MyNavbar', () => {
   beforeEach(() => {

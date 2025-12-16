@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Col, Container, Form, Row, Tab, Tabs } from 'react-bootstrap';
-
-import PieChartComponent from '../../components/PieChartComponent';
+import { Alert, Button, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
+import Sidebar from '../../components/Dashboard/Sidebar';
+import SunburstChart from '../../components/Dashboard/SunburstChart';
+import InferencePanel from '../../components/Inference/InferencePanel';
 import { apiService, apiUrl } from '../../services/ApiService';
 import {
+  Asset,
   CashValue,
   ForecastRequest,
   ForecastResponse,
@@ -11,61 +13,63 @@ import {
   RiskReport,
   Wallet,
 } from '../../services/interfaces';
+import dashboardStyles from '../Dashboard/Dashboard.module.css'; // Import dashboard styles
 import styles from './AdminPage.module.css';
+import { useAuth } from '../../hooks/useAuth';
 
 const AVAILABLE_TICKERS = ["GLD", "PETR4.SA", "VALE3.SA", "WEGE3.SA"];
-
-// Define the SARIMA parameters as constants to ensure correct typing
 const SARIMA_ORDER: [number, number, number] = [2, 1, 2];
 const SEASONAL_ORDER: [number, number, number, number] = [1, 1, 1, 5];
+
+const transformDataForSunburst = (wallet: Wallet | undefined) => {
+  if (!wallet || !wallet.portfolio) {
+    return { name: 'portfolio', children: [] };
+  }
+  return {
+    name: 'portfolio',
+    children: wallet.portfolio.map((asset: Asset) => ({
+      name: asset.ticker,
+      value: asset.allocation,
+    })),
+  };
+};
+
+const RISKS_REPORTS = [
+  "investment_risk2",
+  "investment_risk",
+  "interest_rate_risk_liability",
+  "interest_rate_risk_assets",
+  "crypto_risk2",
+  "country_risk",
+  "country_risk",
+];
 
 const AdminPage = () => {
   const [wallet, setWallet] = useState<Wallet>();
   const [cashValue, setCashValue] = useState<CashValue>();
   const [riskReports, setRiskReports] = useState<RiskReport[]>([]);
-  const [selectedTicker, setSelectedTicker] = useState<string>(
-    AVAILABLE_TICKERS[0]
-  );
-  const [forecastResult, setForecastResult] = useState<ForecastResponse | null>(
-    null
-  );
+  const [selectedTicker, setSelectedTicker] = useState<string>(AVAILABLE_TICKERS[0]);
+  const [forecastResult, setForecastResult] = useState<ForecastResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const RISKS_REPORTS = [
-    "investment_risk2",
-    "investment_risk",
-    "interest_rate_risk_liability",
-    "interest_rate_risk_assets",
-    "crypto_risk2",
-    "country_risk",
-    "country_risk",
-  ];
+  const { currentUser } = useAuth(); // Get currentUser
 
   useEffect(() => {
     const getData = async () => {
-      apiService.get<Wallet>("/portfolio-allocation").then((res) => {
-        setWallet(res);
-      });
+      if (!currentUser) return; // Only fetch if user is authenticated
 
-      apiService.get<CashValue>("/cash-value").then((res) => {
-        setCashValue(res);
-      });
-
+      apiService.get<Wallet>(`/api/v1/portfolio/${currentUser.id}`).then((res) => setWallet(res));
+      apiService.get<CashValue>("/api/v1/cash-value").then((res) => setCashValue(res));
       const reports = await Promise.all(
         RISKS_REPORTS.map(async (report) => {
-          const res = await apiService.get<RiskNotebookResponse>(
-            `/riskNotebook?notebookName=${report}`
-          );
+          const res = await apiService.get<RiskNotebookResponse>(`/api/v1/riskNotebook?notebookName=${report}`);
           return { html: res.notebook_html };
         })
       );
-
       setRiskReports(reports);
     };
-
     getData();
-  }, []);
+  }, [currentUser]);
 
   const handleForecast = async () => {
     setIsLoading(true);
@@ -78,144 +82,167 @@ const AdminPage = () => {
         seasonal_order: SEASONAL_ORDER,
         days: 100,
       };
-
-      const result = await apiService.forecast<ForecastResponse>(
-        "sarima",
-        request
-      );
+      const result = await apiService.forecast<ForecastResponse>("sarima", request);
       setForecastResult(result);
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to generate forecast";
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to generate forecast";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const sunburstData = transformDataForSunburst(wallet);
+
   return (
-    <Container fluid style={{ marginTop: "5rem" }} className={styles.container}>
-      <h2>Administração</h2>
+    <div className={dashboardStyles.container}>
+      <Sidebar />
+      <main className={dashboardStyles.mainContent}>
+        <div className={dashboardStyles.breadcrumbBar}>
+          <div className={dashboardStyles.breadcrumb}>
+            <span className={dashboardStyles.breadcrumbItem}>Perfil</span>
+            <span className={dashboardStyles.breadcrumbSeparator}>{'>'}</span>
+            <span className={dashboardStyles.breadcrumbItemActive}>Admin</span>
+          </div>
+        </div>
+        <div className={dashboardStyles.contentArea}>
+          <div className={dashboardStyles.dashboardHeader}>
+            <h1 className={dashboardStyles.dashboardTitle}>Administração</h1>
+            <div className={dashboardStyles.headerLine}></div>
+          </div>
 
-      {/* Tabs para dividir os conteúdos */}
-      <Tabs defaultActiveKey="assets" id="admin-tabs">
-        {/* Aba Ativos e Carteira */}
-        <Tab eventKey="assets" title="Ativos e Carteira">
-          <Row className="mt-3">
-            <h3>Carteira</h3>
-            <PieChartComponent label={wallet?.portfolio} />
-          </Row>
-          <Row className="mt-5">
-            <h3>Previsão SARIMA</h3>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Selecione o Ativo</Form.Label>
-                <Form.Select
-                  value={selectedTicker}
-                  onChange={(e) => setSelectedTicker(e.target.value)}
-                >
-                  {AVAILABLE_TICKERS.map((ticker) => (
-                    <option key={ticker} value={ticker}>
-                      {ticker}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-              <Button
-                onClick={handleForecast}
-                disabled={isLoading}
-                className="mb-3"
-              >
-                {isLoading ? "Gerando previsão..." : "Gerar Previsão"}
-              </Button>
+          {/* Admin Content Starts Here */}
+          <div className={styles.adminContainer}>
+            <Tabs defaultActiveKey="assets" id="admin-tabs" className={styles.customTabs}>
+              <Tab eventKey="assets" title="Ativos e Carteira">
+                <div className={styles.tabContent}>
+                  <Row>
+                    <Col md={6}>
+                      <div className={styles.card}>
+                        <h3 className={styles.cardTitle}>Carteira</h3>
+                        <div style={{ height: '400px', width: '100%' }}>
+                          <SunburstChart data={sunburstData} />
+                        </div>
+                      </div>
+                    </Col>
+                    <Col md={6}>
+                      <div className={styles.card}>
+                        <h3 className={styles.cardTitle}>Índice Sharpe</h3>
+                        {wallet?.plotBase64 ? (
+                          <img
+                            className={styles.chartImage}
+                            src={"data:image/png;base64," + wallet?.plotBase64}
+                            alt="Índice Sharpe Plot"
+                          />
+                        ) : (
+                          <p className={styles.noDataMessage}>
+                            Gráfico do Índice Sharpe não disponível.
+                            Verifique a API de alocação de portfólio.
+                          </p>
+                        )}
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={12}>
+                       <div className={styles.card}>
+                        <h3 className={styles.cardTitle}>Previsão SARIMA</h3>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Selecione o Ativo</Form.Label>
+                          <Form.Select
+                            className={styles.customSelect}
+                            value={selectedTicker}
+                            onChange={(e) => setSelectedTicker(e.target.value)}
+                          >
+                            {AVAILABLE_TICKERS.map((ticker) => (
+                              <option key={ticker} value={ticker}>{ticker}</option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+                        <Button
+                          onClick={handleForecast}
+                          disabled={isLoading}
+                          className={`${styles.customButton} mb-3`}
+                        >
+                          {isLoading ? "Gerando..." : "Gerar Previsão"}
+                        </Button>
+                        {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
+                        {forecastResult?.plot_base64 && (
+                           <img
+                            className={styles.chartImage}
+                            src={`data:image/png;base64,${forecastResult.plot_base64}`}
+                            alt="Forecast Plot"
+                          />
+                        )}
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={12}>
+                      <div className={styles.card}>
+                        <h3 className={styles.cardTitle}>Valor do Fundo</h3>
+                        <p className={styles.fundValue}>
+                          <span>Investido:</span>
+                          <span>
+                            {cashValue?.invested?.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </span>
+                        </p>
+                        <p className={styles.fundValue}>
+                          <span>Em caixa:</span>
+                          <span>
+                            {cashValue?.inCash?.toLocaleString("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </span>
+                        </p>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
+              </Tab>
 
-              {error && (
-                <Alert variant="danger" className="mt-3">
-                  {error}
-                </Alert>
-              )}
-            </Col>
-          </Row>
-
-          {forecastResult?.plot_base64 && (
-            <>
-              <Row className="mt-3">
-                <Col>
-                  <img
-                    style={{ width: "100%", maxWidth: "800px" }}
-                    src={`data:image/png;base64,${forecastResult.plot_base64}`}
-                    alt="Forecast Plot"
-                  />
-                </Col>
-              </Row>
-            </>
-          )}
-
-          <Row className="mt-5">
-            <h3>Índice Sharpe</h3>
-            {wallet?.plotBase64 && (
-              <img
-                style={{ width: "60%" }}
-                src={"data:image/png;base64," + wallet?.plotBase64}
-              />
-            )}
-          </Row>
-          <Row className="mt-5">
-            <h3>Valor do Fundo</h3>
-            <p>
-              Investido:{" "}
-              {cashValue?.invested?.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </p>
-            <p>
-              Em caixa:{" "}
-              {cashValue?.inCash?.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </p>
-          </Row>
-        </Tab>
-
-        {/* Aba Passivos */}
-        <Tab eventKey="liabilities" title="Passivos">
-          <Row className="mt-3">
-            <div style={{ backgroundColor: "#FFFFFF" }}>
-              <iframe
-                src={`${apiUrl}/passivos`}
-                title="Passivos"
-                style={{ width: "100%", height: "90vh", border: "none" }}
-              />
-            </div>
-          </Row>
-
-          {/* Sub-aba para os relatórios de passivos */}
-          <h3 className="mt-5">Relatórios de Passivos</h3>
-          <Tabs defaultActiveKey="report_0" id="risk-reports">
-            {riskReports.map((report: RiskReport, index: number) => (
-              <Tab
-                eventKey={`report_${index}`}
-                title={`Relatório ${index + 1}`}
-                key={index}
-              >
-                <Row className="mt-3">
-                  <div style={{ backgroundColor: "#FFFFFF" }}>
+              <Tab eventKey="liabilities" title="Passivos e Relatórios">
+                <div className={styles.tabContent}>
+                   <div className={styles.card}>
+                     <h3 className={styles.cardTitle}>Dashboard Passivos</h3>
                     <iframe
-                      key={index}
-                      srcDoc={report.html}
-                      title={`report_${index}`}
-                      style={{ width: "100%", height: "80vh", border: "none" }}
+                      src={`${apiUrl}/api/v1/passivos`}
+                      title="Passivos"
+                      className={styles.reportFrame}
                     />
                   </div>
-                </Row>
+                  <div className={styles.card}>
+                    <h3 className={styles.cardTitle}>Relatórios de Risco</h3>
+                    <Tabs defaultActiveKey="report_0" id="risk-reports-subtabs" className={styles.customSubTabs}>
+                      {riskReports.map((report: RiskReport, index: number) => (
+                        <Tab eventKey={`report_${index}`} title={`Relatório ${index + 1}`} key={index}>
+                          <iframe
+                            key={index}
+                            srcDoc={report.html}
+                            title={`report_${index}`}
+                            className={styles.reportFrame}
+                          />
+                        </Tab>
+                      ))}
+                    </Tabs>
+                  </div>
+                </div>
               </Tab>
-            ))}
-          </Tabs>
-        </Tab>
-      </Tabs>
-    </Container>
+
+              <Tab eventKey="xlstm-inference" title="xLSTM Inference">
+                <div className={styles.tabContent}>
+                  <InferencePanel />
+                </div>
+              </Tab>
+            </Tabs>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 };
 

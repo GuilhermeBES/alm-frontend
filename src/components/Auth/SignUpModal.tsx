@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Alert, Spinner } from 'react-bootstrap';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import logo from '../../assets/logo.png';
 import styles from './SignUpModal.module.css';
 

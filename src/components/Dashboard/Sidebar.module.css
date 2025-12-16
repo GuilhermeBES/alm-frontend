@@ -1,0 +1,269 @@
+/* Sidebar Container */
+.sidebar {
+  width: 246px;
+  min-height: 100vh;
+  background-color: #444B58;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+}
+
+/* Profile Section */
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 34px 24px 28px;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.avatarContainer {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 58px;
+  height: 56px;
+  border-radius: 10px;
+  background: #444B58;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  box-shadow: none;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.editButton {
+  position: absolute;
+  bottom: -11px;
+  right: -4px;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background-color: #32363D;
+  border: none;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editButton:hover {
+  background-color: #2D3A3A;
+  transform: scale(1.05);
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  max-width: 180px;
+}
+
+.profileLabel {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #FFFFFF;
+  text-transform: none;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+}
+
+.profileName {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 22px;
+  color: #FFFFFF;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+/* Menu Navigation */
+.navWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1; /* Takes up remaining vertical space */
+  padding: 0 29px 30px;
+}
+
+.menuNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 18px;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8.5px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-align: left;
+  width: 100%;
+  height: 47px;
+}
+
+.logoutButton:hover {
+  background-color: #E53E3E; /* Red hover */
+  color: #FFFFFF;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8.5px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  text-align: left;
+  width: 100%;
+  height: 47px;
+  margin-bottom: 4px;
+}
+
+.menuItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+  color: #FFFFFF;
+  opacity: 1;
+}
+
+.menuItemActive {
+  background-color: #2D3A3A;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.menuItemActive:hover {
+  background-color: #2D3A3A;
+  transform: none;
+  opacity: 1;
+}
+
+.menuIcon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.menuLabel {
+  flex: 1;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .profileSection {
+    padding: 24px 16px;
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
+
+  .editButton {
+    width: 20px;
+    height: 20px;
+  }
+
+  .menuItem {
+    padding: 8px 12px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    padding: 12px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: #444B58;
+  }
+
+  .profileSection {
+    display: none;
+  }
+
+  .menuNav {
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0 8px;
+    margin-top: 0;
+  }
+
+  .menuItem {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    font-size: 11px;
+    flex: 1;
+    max-width: 80px;
+    height: auto;
+  }
+
+  .menuLabel {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  .menuIcon {
+    width: 20px;
+    height: 20px;
+  }
+}

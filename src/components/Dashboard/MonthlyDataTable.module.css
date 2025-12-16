@@ -1,0 +1,103 @@
+.tableContainer {
+  width: 100%;
+  background-color: #32363D;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Poppins', sans-serif;
+}
+
+.table thead {
+  border-bottom: 1px solid #4A5160;
+}
+
+.table thead th {
+  color: #BDBDBD;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #3A4150;
+  transition: background-color 0.2s;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tbody td {
+  padding: 14px 8px;
+  font-size: 13px;
+  color: #FFFFFF;
+}
+
+.monthCell {
+  font-weight: 400;
+  color: #E0E0E0;
+}
+
+.balanceCell {
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.3px;
+}
+
+.variationCell {
+  font-weight: 600;
+  text-align: right;
+}
+
+.variationCell.positive {
+  color: #2BA84A;
+}
+
+.variationCell.negative {
+  color: #EF5350;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #3A4150;
+}
+
+.pageButton {
+  background: transparent;
+  border: 1px solid #4A5160;
+  color: #FFFFFF;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pageButton:hover {
+  background: #FF6B2C;
+  border-color: #FF6B2C;
+}
+
+.pageButton:first-child {
+  background: #FF6B2C;
+  border-color: #FF6B2C;
+}

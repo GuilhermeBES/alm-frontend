@@ -9,6 +9,7 @@ export interface CashValue {
 }
 
 export interface Asset {
+  ticker: string;
   name: string;
   allocation: number;
   historicalAnnualReturn: number;
@@ -33,6 +34,7 @@ export interface ForecastRequest {
 }
 
 export interface ForecastResponse {
+  ticker: string;
   forecast_dates: string[];
   forecast_values: number[];
   plot_base64?: string;
@@ -81,4 +83,46 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+}
+
+// xLSTM Inference interfaces
+export enum JobStatus {
+  PENDING = "pending",
+  PROCESSING = "processing",
+  COMPLETED = "completed",
+  FAILED = "failed"
+}
+
+export interface ModelInfo {
+  name: string;
+  path: string;
+  config: Record<string, unknown>;
+  loaded: boolean;
+}
+
+export interface ModelsListResponse {
+  models: ModelInfo[];
+}
+
+export interface InferenceUploadResponse {
+  job_id: string;
+  status: JobStatus;
+  model: string;
+  message: string;
+}
+
+export interface PredictionResult {
+  predicted_prices: number[];
+  prediction_horizon: number;
+  current_price: number;
+}
+
+export interface InferenceResultResponse {
+  job_id: string;
+  status: JobStatus;
+  submitted_at: string;
+  completed_at: string | null;
+  model: string;
+  result: PredictionResult | null;
+  error: string | null;
 }

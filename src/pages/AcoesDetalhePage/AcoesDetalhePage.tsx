@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import PieChartComponent from "../../components/LineChartComponent";
+import NivoLineChart from "../../components/Charts/NivoLineChart";
 import MyFooter from "../../components/MyFooter";
 
 // ---- Tipos e mocks (traga do seu arquivo compartilhado se preferir) ----
@@ -98,6 +98,17 @@ export default function AcaoDetalhePage() {
     thumb: `https://placehold.co/84x84/png?text=${ticker}`,
   }));
 
+  // Mock data for Nivo line chart
+  const lineChartData = [
+    {
+      id: s.ticker,
+      data: Array.from({ length: 30 }, (_, i) => ({
+        x: i,
+        y: s.price + (Math.random() - 0.5) * 5,
+      })),
+    },
+  ];
+
   return (
     <div
       style={{ background: "#0b1220", minHeight: "100vh", paddingTop: "4rem" }}
@@ -156,17 +167,11 @@ export default function AcaoDetalhePage() {
               <Card.Body>
                 <div
                   style={{
-                    height: expanded ? "70vh" : "100%",
+                    height: expanded ? "70vh" : 340,
                     transition: "height .25s ease",
                   }}
                 >
-                  <PieChartComponent
-                    label={s.ticker}
-                    points={180}
-                    start={s.price}
-                    vol={0.02}
-                    height={expanded ? "70vh" : 340}
-                  />
+                  <NivoLineChart data={lineChartData} />
                 </div>
                 <div className="mt-3 d-flex gap-4 flex-wrap">
                   <div>

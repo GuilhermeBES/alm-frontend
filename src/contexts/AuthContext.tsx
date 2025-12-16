@@ -1,15 +1,16 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useState, useEffect, ReactNode } from 'react';
 import AuthService from '../services/AuthService';
-import { User, LoginRequest, RegisterRequest, AuthState } from '../services/interfaces';
+import { LoginRequest, RegisterRequest, AuthState, User } from '../services/interfaces';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthContextType extends AuthState {
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<User>;
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -69,12 +70,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       const response = await AuthService.login(credentials);
 
+      // Use the user object from the response
+      const user = response.user;
+
       setState({
-        user: response.user,
+        user: user, // Use the potentially modified user object
         token: response.token,
         isAuthenticated: true,
         isLoading: false,
       });
+      return user; // Return the user object
     } catch (error) {
       setState(prev => ({ ...prev, isLoading: false }));
       throw error;
@@ -107,6 +112,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated: false,
       isLoading: false,
     });
+    window.location.href = '/';
   };
 
   const refreshUser = async () => {
@@ -135,15 +141,4 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-// Hook customizado para usar o contexto
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (context === undefined) {
-    throw new Error('useAuth deve ser usado dentro de AuthProvider');
-  }
-
-  return context;
 };
