@@ -40,8 +40,11 @@ class ApiService {
       }
 
       return (await response.json()) as T;
-    } catch (error: any) {
-      throw new Error(error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(String(error));
     }
   }
 
@@ -53,8 +56,11 @@ class ApiService {
         throw { status: response.status, message: response.statusText };
       }
       return await response.text(); // Obtém o HTML como texto
-    } catch (error: any) {
-      throw new Error(error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(String(error));
     }
   }
 
